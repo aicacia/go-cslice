@@ -1,6 +1,9 @@
 package cslice
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 func TestFront(t *testing.T) {
 	c := New[int]()
@@ -114,5 +117,25 @@ func TestClear(t *testing.T) {
 	c.Clear()
 	if c.Empty() != true {
 		t.Error("expected empty, got not empty")
+	}
+}
+
+func TestSlice(t *testing.T) {
+	c := From([]int{1, 2, 3, 4, 5})
+	fullCopy := c.Slice()
+	if slices.Equal(fullCopy, []int{1, 2, 3, 4, 5}) != true {
+		t.Error("expected [1 2 3 4 5], got ", fullCopy)
+	}
+	middleToEnd := c.Slice(2)
+	if slices.Equal(middleToEnd, []int{3, 4, 5}) != true {
+		t.Error("expected [3 4 5], got ", middleToEnd)
+	}
+	middleToStart := c.Slice(0, 2)
+	if slices.Equal(middleToStart, []int{1, 2}) != true {
+		t.Error("expected [1 2], got ", middleToStart)
+	}
+	negativeIndex := c.Slice(0, -1)
+	if slices.Equal(negativeIndex, []int{1, 2, 3, 4, 5}) != true {
+		t.Error("expected [1 2 3 4 5], got ", negativeIndex)
 	}
 }

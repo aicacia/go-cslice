@@ -181,3 +181,29 @@ func (slice *CSlice[T]) Clear() {
 	defer slice.RWMutex.Unlock()
 	slice.items = nil
 }
+
+func (slice *CSlice[T]) Slice(params ...int) []T {
+	slice.RWMutex.Lock()
+	defer slice.RWMutex.Unlock()
+	var start, end int
+	switch len(params) {
+	case 0:
+		start = 0
+		end = len(slice.items)
+	case 1:
+		start = params[0]
+		end = len(slice.items)
+	default:
+		start = params[0]
+		end = params[1]
+		if end < 0 {
+			end = len(slice.items) + 1 + end
+		}
+	}
+	if start > end {
+		start, end = end, start
+	}
+	clone := make([]T, end-start)
+	copy(clone, slice.items[start:end])
+	return clone
+}
