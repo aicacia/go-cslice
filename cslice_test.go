@@ -77,8 +77,8 @@ func TestRemove(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	c := From[int]([]int{1, 2})
-	deleted := c.Delete(func(i int) bool {
-		return i == 2
+	deleted := c.Delete(func(index int, value int) bool {
+		return value == 2
 	})
 	if !deleted {
 		t.Error("expected true, got ", deleted)

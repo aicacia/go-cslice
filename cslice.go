@@ -139,12 +139,12 @@ func (slice *CSlice[T]) Remove(index int) (T, bool) {
 	return item, true
 }
 
-func (slice *CSlice[T]) Delete(fn func(T) bool) bool {
+func (slice *CSlice[T]) Delete(fn func(int, T) bool) bool {
 	slice.Lock()
 	defer slice.Unlock()
 	index := -1
 	for i, item := range slice.items {
-		if fn(item) {
+		if fn(i, item) {
 			index = i
 			break
 		}
