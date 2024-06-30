@@ -139,6 +139,23 @@ func (slice *CSlice[T]) Remove(index int) (T, bool) {
 	return item, true
 }
 
+func (slice *CSlice[T]) Delete(fn func(T) bool) bool {
+	slice.Lock()
+	defer slice.Unlock()
+	index := -1
+	for i, item := range slice.items {
+		if fn(item) {
+			index = i
+			break
+		}
+	}
+	if index == -1 {
+		return false
+	}
+	slice.items = append(slice.items[:index], slice.items[index+1:]...)
+	return true
+}
+
 func (slice *CSlice[T]) Len() int {
 	slice.RLock()
 	defer slice.RUnlock()

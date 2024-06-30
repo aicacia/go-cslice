@@ -75,6 +75,19 @@ func TestRemove(t *testing.T) {
 	}
 }
 
+func TestDelete(t *testing.T) {
+	c := From[int]([]int{1, 2})
+	deleted := c.Delete(func(i int) bool {
+		return i == 2
+	})
+	if !deleted {
+		t.Error("expected true, got ", deleted)
+	}
+	if item, ok := c.Get(1); ok || item == 2 {
+		t.Error("expected empty, got ", item)
+	}
+}
+
 func TestCopy(t *testing.T) {
 	c := New[int]()
 	copied := c.Copy([]int{1, 2, 3, 4, 5})
